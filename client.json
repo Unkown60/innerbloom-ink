@@ -1,0 +1,45 @@
+{
+  "handle": "innerbloom.ink",
+  "brand": "Innerbloom Ink",
+  "repo": "innerbloom-ink",
+  "instagram": "https://www.instagram.com/innerbloom.ink/",
+  "posts": {
+    "download": true,
+    "mode": "one_image_per_post",
+    "useForHero": true,
+    "useForGallery": true
+  },
+  "showcaseMode": "auto",
+  "showcaseHighlights": {
+    "Healed": "Healed",
+    "Writings": "Writing Tattoos",
+    "Animals": "Animal Tattoos",
+    "Color Tatoos": "Color Tattoos",
+    "Florals": "Florals"
+  },
+  "fallbackShowcase": {
+    "enabled": true,
+    "source": "posts",
+    "when": "no_good_highlights",
+    "categories": [
+      {
+        "name": "Featured Work",
+        "imageCount": 12
+      },
+      {
+        "name": "Recent Tattoos",
+        "imageCount": 12
+      },
+      {
+        "name": "Selected Pieces",
+        "imageCount": 12
+      }
+    ]
+  },
+  "feedbackHighlights": {},
+  "feedbackFallback": {
+    "enabled": false,
+    "whenMissing": "hide_section"
+  },
+  "tone": "friendly"
+}
