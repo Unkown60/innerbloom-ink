@@ -284,6 +284,177 @@ body::after{content:'';position:fixed;inset:0;z-index:9998;pointer-events:none;o
   font-size:0 !important;
 }
 
+
+/* AUTO PATCH: Recent Ink moving reel */
+#hstrip{
+  display:flex !important;
+  gap:16px !important;
+  width:max-content !important;
+  animation:recentInkMove 42s linear infinite !important;
+  will-change:transform !important;
+}
+
+#hstrip:hover{
+  animation-play-state:paused !important;
+}
+
+.hstrip-item{
+  flex:0 0 auto !important;
+  width:240px !important;
+  height:350px !important;
+  border-radius:6px !important;
+  overflow:hidden !important;
+}
+
+.hstrip-item img{
+  width:100% !important;
+  height:100% !important;
+  object-fit:cover !important;
+  display:block !important;
+  filter:grayscale(35%) brightness(.72) !important;
+}
+
+.hstrip-item:hover img{
+  filter:grayscale(0%) brightness(.95) !important;
+  transform:scale(1.04) !important;
+}
+
+@innerbloom.ink recentInkMove{
+  from{
+    transform:translateX(0);
+  }
+  to{
+    transform:translateX(-50%);
+  }
+}
+
+@innerbloom.ink(max-width:768px){
+  #hstrip{
+    gap:12px !important;
+    animation-duration:30s !important;
+  }
+
+  .hstrip-item{
+    width:170px !important;
+    height:260px !important;
+  }
+}
+
+
+/* AUTO PATCH: Force Recent Ink reel movement */
+#hstrip{
+  display:flex !important;
+  gap:16px !important;
+  width:max-content !important;
+  will-change:transform !important;
+  animation:none !important;
+}
+
+.hstrip-item{
+  flex:0 0 auto !important;
+  width:240px !important;
+  height:350px !important;
+  border-radius:6px !important;
+  overflow:hidden !important;
+}
+
+@innerbloom.ink(max-width:768px){
+  .hstrip-item{
+    width:170px !important;
+    height:260px !important;
+  }
+}
+
+
+/* AUTO PATCH: Fix process icons when Material Symbols fail */
+.process-icon .material-symbols-outlined{
+  display:none !important;
+}
+
+.process-step:nth-child(1) .process-icon::before{
+  content:"01";
+}
+
+.process-step:nth-child(2) .process-icon::before{
+  content:"02";
+}
+
+.process-step:nth-child(3) .process-icon::before{
+  content:"03";
+}
+
+.process-step:nth-child(4) .process-icon::before{
+  content:"04";
+}
+
+.process-icon::before{
+  font-family: 'Hanken Grotesk', Arial, sans-serif;
+  font-size:22px;
+  letter-spacing:.18em;
+  color:rgba(255,255,255,.55);
+  font-weight:600;
+}
+
+.process-icon{
+  background:rgba(255,255,255,.025) !important;
+}
+
+
+/* AUTO PATCH: Bigger process numbers */
+.process-icon::before{
+  font-size:22px !important;
+  letter-spacing:.12em !important;
+  color:rgba(255,255,255,.72) !important;
+}
+
+.process-icon{
+  width:72px !important;
+  height:72px !important;
+}
+
+@media(max-width:768px){
+  .process-icon{
+    width:58px !important;
+    height:58px !important;
+  }
+  .process-icon::before{
+    font-size:18px !important;
+  }
+}
+
+
+/* AUTO PATCH: Bigger collection carousel images */
+@media(min-width:768px){
+  .c-scene{
+    height:640px !important;
+    margin-bottom:10px !important;
+  }
+
+  .c-item{
+    width:380px !important;
+    height:500px !important;
+  }
+
+  .c-nav{
+    width:min(1120px,96vw) !important;
+  }
+
+  .c-info{
+    margin-top:-18px !important;
+  }
+}
+
+@media(max-width:767px){
+  .c-scene{
+    height:430px !important;
+  }
+
+  .c-item{
+    width:225px !important;
+    height:310px !important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -480,7 +651,7 @@ body::after{content:'';position:fixed;inset:0;z-index:9998;pointer-events:none;o
 <!-- ═══════════════════════════════════════════════ -->
 <!-- REVIEWS                                         -->
 <!-- ═══════════════════════════════════════════════ -->
-<section class="py-16 md:py-32" id="reviews" style="display:none" style="display:none" style="display:none" style="display:none" style="display:none" style="display:none" style="display:none" style="display:none">
+<section class="py-16 md:py-32" id="reviews" style="display:none" style="display:none" style="display:none" style="display:none" style="display:none" style="display:none" style="display:none" style="display:none" style="display:none" style="display:none" style="display:none" style="display:none" style="display:none" style="display:none" style="display:none" style="display:none" style="display:none" style="display:none">
   <div class="px-5 md:px-margin-desktop">
     <div class="text-center mb-10 md:mb-14 rv">
       <p class="text-[10px] font-semibold tracking-[.35em] uppercase text-white/30 mb-3">Real Feedback</p>
@@ -822,4 +993,45 @@ document.getElementById('mmBtn').addEventListener('click',()=>{mm.classList.remo
 document.getElementById('mmClose').addEventListener('click',cmm);
 function cmm(){mm.classList.add('hidden');mm.style.display=''}
 </script>
+
+<script>
+/* AUTO PATCH: JS Recent Ink moving reel */
+(function(){
+  function startRecentInkReel(){
+    const track = document.getElementById('hstrip');
+    if(!track) return;
+
+    // Duplicate cards only once for infinite loop
+    if(track.dataset.reelReady !== "1"){
+      const items = Array.from(track.children);
+      items.forEach(item => track.appendChild(item.cloneNode(true)));
+      track.dataset.reelReady = "1";
+    }
+
+    let x = 0;
+    const speed = 2; // increase to 1.2 for faster
+
+    function frame(){
+      const halfWidth = track.scrollWidth / 2;
+      x += speed;
+
+      if(x >= halfWidth){
+        x = 0;
+      }
+
+      track.style.transform = "translate3d(" + (-x) + "px, 0, 0)";
+      requestAnimationFrame(frame);
+    }
+
+    requestAnimationFrame(frame);
+  }
+
+  if(document.readyState === "loading"){
+    document.addEventListener("DOMContentLoaded", startRecentInkReel);
+  }else{
+    startRecentInkReel();
+  }
+})();
+</script>
+
 </body></html>
